@@ -1,5 +1,12 @@
 /*
-  #Título: ANIMAL SCAN
+  #Título: ANIMAL SCAN - Protótipo de Sistema de Detecção de Animais em Automóveis
+
+  #Descrição breve: O projeto ANIMAL SCAN visa desenvolver um sistema de detecção
+                    de animais sob veículos, com o objetivo de evitar acidentes e
+                    lesões aos animais. Este protótipo utiliza um sensor de movimento 
+                    PIR para detectar a presença de animais e emite alertas visuais 
+                    e sonoros.
+
 
   #Autoras:
     Vanessa Santos do Nascimento - 2019128@aluno.diocesanocaruaru.g12.br
@@ -62,6 +69,8 @@
       A (7)- SENSOR DE MOVIMENTO PIR
       B (8)- BUZZER ATIVO 5V
       C (9)- LED DIFUSO VERMELHO 10MM
+
+      
   ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
   LICENÇA - Copyright 2023 Vanessa Santos, Julia Gabriela e Diógenes Souza
   ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
@@ -89,27 +98,40 @@
   ---------------------------------------------------------------------------
 */
 
+//declaração de variáreis, com os nomes dos componentes, que guardam o número do pino em que estão conectados ao Arduino
 byte PIR = 7;
 byte BUZZER = 8;
 byte LED = 9;
-byte movimento;
 
+//na função setup(), o modo de operação dos pinos do Arduino, nos quais estão conectados aos componentes, é configurado para "entrada"(INPUT) ou "saída" (OUTPUT)
 void setup() {
-  pinMode(PIR, INPUT);
-  pinMode(BUZZER, OUTPUT);
-  pinMode(LED, OUTPUT);
-  Serial.begin(9600);
+  pinMode(PIR, INPUT); //o pino 7, no qual está conectado o sensor PIR, funcionará no modo INPUT (entrada)
+  pinMode(BUZZER, OUTPUT); //o pino 8, no qual está conectado o Buzzer, funcionará no modo OUTPUT (saída)
+  pinMode(LED, OUTPUT); //o pino 9, no qual está conectado o LED, funcionará no modo OUTPUT (saída)
 }
 
+//na função loop(), está o código que será executado de forma repetida e no qual estão as tarefas a serem executadas
 void loop() {
-  movimento = digitalRead(PIR);
-  if ( movimento == 1) {
-    alerta();
+  if ( digitalRead(PIR) == 1) {  //condição: SE o valor da leitura feita no pino 7 (sensor digital PIR) for igual a 1 (o que representa que houve movimento), será executada a função alerta()
+    alerta(); //a função alerta() está mais abaixo, e nela está um conjunto de tarefas nas quais o LED e o Buzeer são acionados, para emitir o sinal de que houve movimento
   }
 }
 
+//na função alerta(), o LED é ligado e o Buzzer é ativado e desativado de forma intermitente, ao longo de dois segundos, após isso o LED é apagado
 void alerta() {
-  analogWrite(LED, 100);
+  analogWrite(LED, 100); //o pino 9, no qual está conectado o LED, é configurado para fornecer o valor analógico 100 (de 255), o que equivale a aproximadamente 2v de tensão, já que no projeto não houve utilização de resistor com o LED
+  digitalWrite(BUZZER, HIGH); //o pino 8, no qual está conectado o Buzeer, é ativado em estado alto (total), 5v, ativando o silvo/apito
+  delay(100); //aguarda um tempo de 100 milissegundos até executar a próxima tarefa
+  digitalWrite(BUZZER, LOW); //o pino 8, no qual está conectado o Buzeer, é desativado (0v - estado baixo)
+  delay(100); 
+  digitalWrite(BUZZER, HIGH);
+  delay(400);
+  digitalWrite(BUZZER, LOW);
+  delay(100);
+  digitalWrite(BUZZER, HIGH);
+  delay(100);
+  digitalWrite(BUZZER, LOW);
+  delay(100);
   digitalWrite(BUZZER, HIGH);
   delay(100);
   digitalWrite(BUZZER, LOW);
@@ -119,20 +141,8 @@ void alerta() {
   digitalWrite(BUZZER, LOW);
   delay(100);
   digitalWrite(BUZZER, HIGH);
-  delay(100);
-  digitalWrite(BUZZER, LOW);
-  delay(100);
-  digitalWrite(BUZZER, HIGH);
-  delay(100);
-  digitalWrite(BUZZER, LOW);
-  delay(100);
-  digitalWrite(BUZZER, HIGH);
   delay(400);
   digitalWrite(BUZZER, LOW);
-  delay(100);
-  digitalWrite(BUZZER, HIGH);
-  delay(400);
-  digitalWrite(BUZZER, LOW);
-  analogWrite(LED, 0);
-  delay(1000);
+  analogWrite(LED, 0); //o pino 9, no qual está conectado o LED, é desativado, apagando-o
+  delay(1000); //aguarda 1 segundo antes de encerrar a função e ir para a próxima linha de código
 }
